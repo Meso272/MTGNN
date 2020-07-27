@@ -87,6 +87,6 @@ evaluateL1 = nn.L1Loss(size_average=False).to(device)
 with open(args.save, 'rb') as f:
     model = torch.load(f)
 
-test_acc, test_rae, test_corr = evaluate(Data, model, evaluateL2, evaluateL1,
+test_acc, test_rae, test_corr = pred(Data, model, evaluateL2, evaluateL1,
                                          )
 print("final test rse {:5.4f} | test rae {:5.4f} | test corr {:5.4f}".format(test_acc, test_rae, test_corr))
