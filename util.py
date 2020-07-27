@@ -171,7 +171,7 @@ class DataLoaderS_pred(object):
         else:
             self.X=np.concatenate((self,X[:,1:,:],newestdata),axis=1) 
             '''
-        self.X=np.concatenate((self,X[:,1:,:],newestdata),axis=1) 
+        self.X=np.concatenate((self.X[:,1:,:],newestdata),axis=1) 
         return True  
 
 class DataLoaderM(object):
