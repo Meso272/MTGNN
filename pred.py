@@ -81,7 +81,7 @@ args = parser.parse_args()
 device = torch.device(args.device)
 torch.set_num_threads(3)
 
-Data = DataLoaderS_pred(args.data, 0.6, 0.2, device, args.seq_in_len, normalize=args.normalize)
+Data = DataLoaderS_pred(args.data, 0.6, 0.2, device, args.seq_in_len, args.normalize)
 evaluateL2 = nn.MSELoss(size_average=False).to(device)
 evaluateL1 = nn.L1Loss(size_average=False).to(device)
 with open(args.save, 'rb') as f:

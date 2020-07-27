@@ -170,10 +170,10 @@ class DataLoaderS_pred(object):
         elif self.X.shape[1]<self.P:
             self.X=np.concatenate((self,X,newestdata),axis=1)
         else:
-            self.X=np.concatenate((self,X[:,1:,:],newestdata),axis=1)   
+            self.X=np.concatenate((self,X[:,1:,:],newestdata),axis=1) 
+        return True  
 
-    
-
+class DataLoaderM(object):
     def __init__(self, xs, ys, batch_size, pad_with_last_sample=True):
         """
         :param xs:
