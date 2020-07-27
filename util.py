@@ -142,8 +142,8 @@ class DataLoaderS_pred(object):
         #self.valid = self._batchify(valid_set)
         #self.test = self._batchify(test_set)
     def get_data(self):
-        X = torch.from_numpy(self.X).to(self.device)
-        Y = torch.from_numpy(self.Y).to(self.device)
+        X = torch.from_numpy(self.X.astype(np.float32)).to(self.device)
+        Y = torch.from_numpy(self.Y.astype(np.float32)).to(self.device)
         return Variable(X), Variable(Y)
     
     def get_pos(self):
