@@ -135,12 +135,8 @@ class DataLoaderS_pred(object):
         self.start=valid
         self.Y=self.dat[valid,:][np.newaxis,:]
         self.X=self.dat[(valid-self.P):valid,:][np.newaxis,:]
-        #train_set = range(self.P + self.h - 1, train)
-        #valid_set = range(train, valid)
-       
-        #self.train = self._batchify(train_set)
-        #self.valid = self._batchify(valid_set)
-        #self.test = self._batchify(test_set)
+        #self.First=True
+    
     def get_data(self):
         X = torch.from_numpy(self.X.astype(np.float32)).to(self.device)
         Y = torch.from_numpy(self.Y.astype(np.float32)).to(self.device)
@@ -149,9 +145,10 @@ class DataLoaderS_pred(object):
     def get_pos(self):
         return self.pos
     def reset_data(self):
+        #self.first=True
         self.pos=self.start
         self.Y=self.dat[self.pos,:][np.newaxis,:]
-        self.X=None
+        self.X=self.dat[(valid-self.P):valid,:][np.newaxis,:]
     def set_pos(self,index):
 
         self.pos=index
@@ -165,12 +162,16 @@ class DataLoaderS_pred(object):
             newestdata=self.dat[self.pos,:][np.newaxis,np.newaxis,:]
         self.pos=self.pos+1
         self.Y=self.dat[self.pos,:][np.newaxis,:]
-        if self.X==None:
+        '''
+        if self.first:
             self.X=newestdata
+            self.first=False
         elif self.X.shape[1]<self.P:
             self.X=np.concatenate((self,X,newestdata),axis=1)
         else:
             self.X=np.concatenate((self,X[:,1:,:],newestdata),axis=1) 
+            '''
+        self.X=np.concatenate((self,X[:,1:,:],newestdata),axis=1) 
         return True  
 
 class DataLoaderM(object):
