@@ -24,6 +24,7 @@ class DataLoaderS(object):
         self._split(int(train * self.n), int((train + valid) * self.n), self.n)
 
         self.scale = torch.from_numpy(self.scale).float()
+
         tmp = self.test[1] * self.scale.expand(self.test[1].size(0), self.m)
 
         self.scale = self.scale.to(device)
@@ -57,7 +58,7 @@ class DataLoaderS(object):
         self.train = self._batchify(train_set, self.h)
         self.valid = self._batchify(valid_set, self.h)
         self.test = self._batchify(test_set, self.h)
-
+   
     def _batchify(self, idx_set, horizon):
         n = len(idx_set)
         X = torch.zeros((n, self.P, self.m))
@@ -86,7 +87,93 @@ class DataLoaderS(object):
             yield Variable(X), Variable(Y)
             start_idx += batch_size
 
-class DataLoaderM(object):
+
+class DataLoaderS_pred(object):
+    # train and valid is the ratio of training set and validation set. test = 1 - train - valid
+    def __init__(self, file_name, train, valid, device, window, normalize=2):
+        self.P = window
+        
+        fin = open(file_name)
+        self.rawdat = np.loadtxt(fin, delimiter=',')
+        self.dat = np.zeros(self.rawdat.shape)
+        self.n, self.m = self.dat.shape
+        self.normalize = 2
+        self.scale = np.ones(self.m)
+        self._normalized(normalize)
+        self._split_and_initate(int(train * self.n), int((train + valid) * self.n), self.n)
+
+        self.scale = torch.from_numpy(self.scale).float()
+        tmp = self.test_set * self.scale.expand(self.test_set.size(0), self.m)
+
+        self.scale = self.scale.to(device)
+        self.scale = Variable(self.scale)
+
+        self.rse = normal_std(tmp)
+        self.rae = torch.mean(torch.abs(tmp - torch.mean(tmp)))
+
+        self.device = device
+
+    def _normalized(self, normalize):
+        # normalized by the maximum value of entire matrix.
+
+        if (normalize == 0):
+            self.dat = self.rawdat
+
+        if (normalize == 1):
+            self.dat = self.rawdat / np.max(self.rawdat)
+
+        # normlized by the maximum value of each row(sensor).
+        if (normalize == 2):
+            for i in range(self.m):
+                self.scale[i] = np.max(np.abs(self.rawdat[:, i]))
+                self.dat[:, i] = self.rawdat[:, i] / np.max(np.abs(self.rawdat[:, i]))
+
+    def _split_and_initate(self, train, valid, test):
+        self.test_set = torch.from_numpy(self.dat[valid:self.n])
+
+        self.pos=valid
+        self.start=valid
+        self.Y=self.dat[valid,:][np.newaxis,:]
+        self.X=self.dat[(valid-self.P):valid,:][np.newaxis,:]
+        #train_set = range(self.P + self.h - 1, train)
+        #valid_set = range(train, valid)
+       
+        #self.train = self._batchify(train_set)
+        #self.valid = self._batchify(valid_set)
+        #self.test = self._batchify(test_set)
+    def get_data(self):
+        X = np.array(self.X).to(self.device)
+        Y = np.array(self.Y).to(self.device)
+        return Variable(X), Variable(Y)
+    
+    def get_pos(self):
+        return self.pos
+    def reset_data(self):
+        self.pos=self.start
+        self.Y=self.dat[self.pos,:][np.newaxis,:]
+        self.X=None
+    def set_pos(self,index):
+
+        self.pos=index
+    def go_next(self, datapoint=None):
+        if self.pos>=self.n-1:
+            return False
+        
+        if datapoint!=None:
+            newestdata=datapoint
+        else:
+            newestdata=self.dat[self.pos,:][np.newaxis,np.newaxis,:]
+        self.pos=self.pos+1
+        self.Y=self.dat[self.pos,:][np.newaxis,:]
+        if self.X==None:
+            self.X=newestdata
+        elif self.X.shape[1]<self.P:
+            self.X=np.concatenate((self,X,newestdata),axis=1)
+        else:
+            self.X=np.concatenate((self,X[:,1:,:],newestdata),axis=1)   
+
+    
+
     def __init__(self, xs, ys, batch_size, pad_with_last_sample=True):
         """
         :param xs:
