@@ -106,7 +106,7 @@ class DataLoaderS_pred(object):
         
         self.Y=self.dat[:][np.newaxis,:]
         self.X=None
-        self.First=True
+        self.first=True
         self.scale = torch.from_numpy(self.scale).float()
         #tmp = self.test_set * self.scale.expand(self.test_set.size(0), self.m)
         
@@ -153,7 +153,7 @@ class DataLoaderS_pred(object):
         self.pos=0
         self.Y=self.dat[self.pos,:][np.newaxis,:]
         self.X=None
-        self.First=True
+        self.first=True
     def set_pos(self,index):
 
         self.pos=index
