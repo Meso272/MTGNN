@@ -100,7 +100,7 @@ class DataLoaderS_pred(object):
         self.normalize = 2
         self.scale = np.ones(self.m)
         self._normalized(normalize)
-        self.test_set = torch.from_numpy(self.dat=)
+        #self.test_set = torch.from_numpy(self.dat=)
 
         self.pos=0
         
