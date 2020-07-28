@@ -172,9 +172,9 @@ class DataLoaderS_pred(object):
             self.X=newestdata
             self.first=False
         elif self.X.shape[1]<self.P:
-            self.X=np.concatenate((self,X,newestdata),axis=1)
+            self.X=np.concatenate((self.X,newestdata),axis=1)
         else:
-            self.X=np.concatenate((self,X[:,1:,:],newestdata),axis=1) 
+            self.X=np.concatenate((self.X[:,1:,:],newestdata),axis=1) 
             
         #self.X=np.concatenate((self.X[:,1:,:],newestdata),axis=1) 
         return True  
