@@ -77,7 +77,7 @@ def pred(data,model,output):
             if len(output.shape)==1:
                 output = output.unsqueeze(dim=0)
         else:
-            output=torch.zeros(1,data.m).to(data.device)
+            output=torch.zeros(1,data.m).cuda()
         if predict is None:
             predict = output
             #test = Y
