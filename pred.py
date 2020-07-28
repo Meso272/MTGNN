@@ -137,7 +137,7 @@ torch.set_num_threads(3)
 Data = DataLoaderS_pred(args.data, args.n, args.m, device, args.seq_in_len, args.normalize)
 #evaluateL2 = nn.MSELoss(size_average=False).to(device)
 #evaluateL1 = nn.L1Loss(size_average=False).to(device)
-with open(args.save, 'rb') as f:
+with open(args.model, 'rb') as f:
     model = torch.load(f)
 
 pred(Data, model,args.output)
