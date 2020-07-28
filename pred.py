@@ -20,7 +20,7 @@ def pred_and_evaluate(data,model, evaluateL2, evaluateL1):
 
     while(1):
         X,Y=data.get_data()
-        #print(data.get_pos())
+        print(data.get_pos())
         X = torch.unsqueeze(X,dim=1)
         X = X.transpose(2,3)
         with torch.no_grad():
