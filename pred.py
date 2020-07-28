@@ -67,7 +67,7 @@ def pred(data,model,output):
 
     while(1):
         X,Y=data.get_data()
-        print(data.get_pos())
+        #print(data.get_pos())
         if data.get_pos()>=data.P:
             X = torch.unsqueeze(X,dim=1)
             X = X.transpose(2,3)
