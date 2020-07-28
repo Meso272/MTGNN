@@ -10,7 +10,7 @@ import importlib
 
 from util import *
 
-def pred(data,model, evaluateL2, evaluateL1):
+def pred_and_evaluate(data,model, evaluateL2, evaluateL1):
     model.eval()
     total_loss = 0
     total_loss_l1 = 0
@@ -56,6 +56,43 @@ def pred(data,model, evaluateL2, evaluateL1):
     correlation = (correlation[index]).mean()
     return rse, rae, correlation
 
+def pred(data,model, start=0):
+    model.eval()
+    total_loss = 0
+    total_loss_l1 = 0
+    n_samples = 0
+    predict = None
+    test = None
+
+    while(1):
+        X,Y=data.get_data()
+        #print(data.get_pos())
+        X = torch.unsqueeze(X,dim=1)
+        X = X.transpose(2,3)
+        with torch.no_grad():
+            output = model(X)
+        output = torch.squeeze(output)
+        if len(output.shape)==1:
+            output = output.unsqueeze(dim=0)
+        if predict is None:
+            predict = output
+            test = Y
+        else:
+            predict = torch.cat((predict, output))
+            test = torch.cat((test, Y))
+
+        scale = data.scale.expand(output.size(0), data.m)
+        
+        
+        if not data.go_next():
+            break
+
+   
+
+    predict = predict.data.cpu().numpy()
+    print(predict.shape)
+    
+    
 
 parser = argparse.ArgumentParser(description='predictor')
 parser.add_argument('--data', type=str, default='./data/solar_AL.txt',
@@ -87,6 +124,6 @@ evaluateL1 = nn.L1Loss(size_average=False).to(device)
 with open(args.save, 'rb') as f:
     model = torch.load(f)
 
-test_acc, test_rae, test_corr = pred(Data, model, evaluateL2, evaluateL1,
+test_acc, test_rae, test_corr = pred(Data, model
                                          )
-print("final test rse {:5.4f} | test rae {:5.4f} | test corr {:5.4f}".format(test_acc, test_rae, test_corr))
+#print("final test rse {:5.4f} | test rae {:5.4f} | test corr {:5.4f}".format(test_acc, test_rae, test_corr))
