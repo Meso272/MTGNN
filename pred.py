@@ -77,7 +77,7 @@ def pred(data,model,output):
             if len(output.shape)==1:
                 output = output.unsqueeze(dim=0)
         else:
-            output=torch.zeros(1,data.m).cuda()
+            output=Variable(torch.zeros(1,data.m).to(data.device))
         if predict is None:
             predict = output
             #test = Y
@@ -94,9 +94,9 @@ def pred(data,model,output):
    
 
     predict = predict.data.cpu().numpy()
-    if normalize==1:
+    if data.normalize==1:
         predict=np.multiply(predict,data.max)
-    elif normalize==2:
+    elif data.normalize==2:
         scale=data.scale.data.cpu().numpy()
         predict=np.multiply(predict,scale)
 
