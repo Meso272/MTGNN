@@ -56,30 +56,34 @@ def pred_and_evaluate(data,model, evaluateL2, evaluateL1):
     correlation = (correlation[index]).mean()
     return rse, rae, correlation
 
-def pred(data,model, start=0):
+
+def pred(data,model,output):
     model.eval()
     total_loss = 0
     total_loss_l1 = 0
     n_samples = 0
     predict = None
-    test = None
+    #test = None
 
     while(1):
         X,Y=data.get_data()
         #print(data.get_pos())
-        X = torch.unsqueeze(X,dim=1)
-        X = X.transpose(2,3)
-        with torch.no_grad():
-            output = model(X)
-        output = torch.squeeze(output)
-        if len(output.shape)==1:
-            output = output.unsqueeze(dim=0)
+        if data.get_pos()>=data.P:
+            X = torch.unsqueeze(X,dim=1)
+            X = X.transpose(2,3)
+            with torch.no_grad():
+                output = model(X)
+            output = torch.squeeze(output)
+            if len(output.shape)==1:
+                output = output.unsqueeze(dim=0)
+        else:
+            output=torch.zeros(1,data.m)
         if predict is None:
             predict = output
-            test = Y
+            #test = Y
         else:
             predict = torch.cat((predict, output))
-            test = torch.cat((test, Y))
+            #test = torch.cat((test, Y))
 
         scale = data.scale.expand(output.size(0), data.m)
         
@@ -90,16 +94,26 @@ def pred(data,model, start=0):
    
 
     predict = predict.data.cpu().numpy()
-    print(predict.shape)
+    if normalize==1:
+        predict=np.multiply(predict,data.max)
+    elif normalize==2:
+        scale=data.scale.data.cpu().numpy()
+        predict=np.multiply(predict,scale)
+
+
     
+    #print(predict.shape)
+    predict.tofile(args.output)
     
 
 parser = argparse.ArgumentParser(description='predictor')
-parser.add_argument('--data', type=str, default='./data/solar_AL.txt',
+parser.add_argument('--data', type=str, default='./data/solar_AL_test.dat',
                     help='location of the data file')
 
-parser.add_argument('--save', type=str, default='model/model.pt',
-                    help='path to save the final model')
+parser.add_argument('--model', type=str, default='model/model.pt',
+                    help='path to the model')
+parser.add_argument('--output', type=str, default='model/model.pt',
+                    help='path to the predicted ')
 parser.add_argument('--normalize', type=int, default=2)
 parser.add_argument('--device',type=str,default='cuda:1',help='')
 
@@ -118,12 +132,12 @@ args = parser.parse_args()
 device = torch.device(args.device)
 torch.set_num_threads(3)
 
-Data = DataLoaderS_pred(args.data, 0.6, 0.2, device, args.seq_in_len, args.normalize)
-evaluateL2 = nn.MSELoss(size_average=False).to(device)
-evaluateL1 = nn.L1Loss(size_average=False).to(device)
+Data = DataLoaderS_pred(args.data, 10512, 137, device, args.seq_in_len, args.normalize)
+#evaluateL2 = nn.MSELoss(size_average=False).to(device)
+#evaluateL1 = nn.L1Loss(size_average=False).to(device)
 with open(args.save, 'rb') as f:
     model = torch.load(f)
 
-test_acc, test_rae, test_corr = pred(Data, model
+pred(Data, model,args.output)
                                          )
 #print("final test rse {:5.4f} | test rae {:5.4f} | test corr {:5.4f}".format(test_acc, test_rae, test_corr))

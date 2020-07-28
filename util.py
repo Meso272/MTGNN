@@ -90,26 +90,31 @@ class DataLoaderS(object):
 
 class DataLoaderS_pred(object):
     # train and valid is the ratio of training set and validation set. test = 1 - train - valid
-    def __init__(self, file_name, train, valid, device, window, normalize=2):
+    def __init__(self, file_name,n,m,device, window, normalize=2):
         self.P = window
         
-        fin = open(file_name)
-        self.rawdat = np.loadtxt(fin, delimiter=',')
+        #fin = open(file_name)
+        self.rawdat = np.fromfile(file_name, delimiter=',').reshape(n,m)
         self.dat = np.zeros(self.rawdat.shape)
-        self.n, self.m = self.dat.shape
+        self.n, self.m = n,m
         self.normalize = 2
         self.scale = np.ones(self.m)
         self._normalized(normalize)
-        self._split_and_initate(int(train * self.n), int((train + valid) * self.n), self.n)
+        self.test_set = torch.from_numpy(self.dat=)
 
+        self.pos=0
+        
+        self.Y=self.dat[:][np.newaxis,:]
+        self.X=None
+        self.First=True
         self.scale = torch.from_numpy(self.scale).float()
-        tmp = self.test_set * self.scale.expand(self.test_set.size(0), self.m)
-
+        #tmp = self.test_set * self.scale.expand(self.test_set.size(0), self.m)
+        
         self.scale = self.scale.to(device)
         self.scale = Variable(self.scale)
 
-        self.rse = normal_std(tmp)
-        self.rae = torch.mean(torch.abs(tmp - torch.mean(tmp)))
+        #self.rse = normal_std(tmp)
+        #self.rae = torch.mean(torch.abs(tmp - torch.mean(tmp)))
 
         self.device = device
 
@@ -120,6 +125,7 @@ class DataLoaderS_pred(object):
             self.dat = self.rawdat
 
         if (normalize == 1):
+            self.max=np.max(self.rawdat)
             self.dat = self.rawdat / np.max(self.rawdat)
 
         # normlized by the maximum value of each row(sensor).
@@ -128,14 +134,8 @@ class DataLoaderS_pred(object):
                 self.scale[i] = np.max(np.abs(self.rawdat[:, i]))
                 self.dat[:, i] = self.rawdat[:, i] / np.max(np.abs(self.rawdat[:, i]))
 
-    def _split_and_initate(self, train, valid, test):
-        self.test_set = torch.from_numpy(self.dat[valid:self.n])
-
-        self.pos=valid
-        self.start=valid
-        self.Y=self.dat[valid,:][np.newaxis,:]
-        self.X=self.dat[(valid-self.P):valid,:][np.newaxis,:]
-        #self.First=True
+   
+        #
     
     def get_data(self):
         X = torch.from_numpy(self.X.astype(np.float32)).to(self.device)
@@ -146,9 +146,9 @@ class DataLoaderS_pred(object):
         return self.pos
     def reset_data(self):
         #self.first=True
-        self.pos=self.start
+        self.pos=0
         self.Y=self.dat[self.pos,:][np.newaxis,:]
-        self.X=self.dat[(valid-self.P):valid,:][np.newaxis,:]
+        self.X=None
     def set_pos(self,index):
 
         self.pos=index
@@ -162,7 +162,7 @@ class DataLoaderS_pred(object):
             newestdata=self.dat[self.pos,:][np.newaxis,np.newaxis,:]
         self.pos=self.pos+1
         self.Y=self.dat[self.pos,:][np.newaxis,:]
-        '''
+        
         if self.first:
             self.X=newestdata
             self.first=False
@@ -170,8 +170,8 @@ class DataLoaderS_pred(object):
             self.X=np.concatenate((self,X,newestdata),axis=1)
         else:
             self.X=np.concatenate((self,X[:,1:,:],newestdata),axis=1) 
-            '''
-        self.X=np.concatenate((self.X[:,1:,:],newestdata),axis=1) 
+            
+        #self.X=np.concatenate((self.X[:,1:,:],newestdata),axis=1) 
         return True  
 
 class DataLoaderM(object):
