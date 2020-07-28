@@ -94,6 +94,7 @@ def pred(data,model,output):
    
 
     predict = predict.data.cpu().numpy()
+    print(predict.shape)
     if data.normalize==1:
         predict=np.multiply(predict,data.max)
     elif data.normalize==2:
@@ -102,7 +103,7 @@ def pred(data,model,output):
 
 
     
-    #print(predict.shape)
+    print(predict.shape)
     predict.tofile(args.output)
     
 
