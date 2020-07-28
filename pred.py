@@ -112,9 +112,11 @@ parser.add_argument('--data', type=str, default='./data/solar_AL_test.dat',
 
 parser.add_argument('--model', type=str, default='model/model.pt',
                     help='path to the model')
-parser.add_argument('--output', type=str, default='model/model.pt',
+parser.add_argument('--output', type=str, 
                     help='path to the predicted ')
 parser.add_argument('--normalize', type=int, default=2)
+parser.add_argument('--n', type=int, default=10512,help='num of time steps')
+parser.add_argument('--m', type=int, default=137,help='num of variables ')
 parser.add_argument('--device',type=str,default='cuda:1',help='')
 
 
@@ -132,12 +134,12 @@ args = parser.parse_args()
 device = torch.device(args.device)
 torch.set_num_threads(3)
 
-Data = DataLoaderS_pred(args.data, 10512, 137, device, args.seq_in_len, args.normalize)
+Data = DataLoaderS_pred(args.data, args.n, args.m, device, args.seq_in_len, args.normalize)
 #evaluateL2 = nn.MSELoss(size_average=False).to(device)
 #evaluateL1 = nn.L1Loss(size_average=False).to(device)
 with open(args.save, 'rb') as f:
     model = torch.load(f)
 
 pred(Data, model,args.output)
-                                         )
+                                         
 #print("final test rse {:5.4f} | test rae {:5.4f} | test corr {:5.4f}".format(test_acc, test_rae, test_corr))
