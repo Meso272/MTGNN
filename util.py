@@ -138,9 +138,13 @@ class DataLoaderS_pred(object):
         #
     
     def get_data(self):
-        X = torch.from_numpy(self.X.astype(np.float32)).to(self.device)
-        Y = torch.from_numpy(self.Y.astype(np.float32)).to(self.device)
-        return Variable(X), Variable(Y)
+        if self.first:
+            Y = torch.from_numpy(self.Y.astype(np.float32)).to(self.device)
+            return None,Y
+        else:
+            X = torch.from_numpy(self.X.astype(np.float32)).to(self.device)
+            Y = torch.from_numpy(self.Y.astype(np.float32)).to(self.device)
+            return Variable(X), Variable(Y)
     
     def get_pos(self):
         return self.pos
@@ -149,6 +153,7 @@ class DataLoaderS_pred(object):
         self.pos=0
         self.Y=self.dat[self.pos,:][np.newaxis,:]
         self.X=None
+        self.First=True
     def set_pos(self,index):
 
         self.pos=index
