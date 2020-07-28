@@ -94,7 +94,7 @@ class DataLoaderS_pred(object):
         self.P = window
         
         #fin = open(file_name)
-        self.rawdat = np.fromfile(file_name, delimiter=',').reshape(n,m)
+        self.rawdat = np.fromfile(file_name).reshape(n,m)
         self.dat = np.zeros(self.rawdat.shape)
         self.n, self.m = n,m
         self.normalize = 2
