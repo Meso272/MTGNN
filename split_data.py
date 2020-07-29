@@ -10,6 +10,7 @@ args = parser.parse_args()
 
 
 data=np.loadtxt(args.data,delimiter=',')
+data=data.astype(np.float32)
 n=data.shape[0]
 start=int(args.portion*n)
 
