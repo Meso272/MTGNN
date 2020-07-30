@@ -28,15 +28,15 @@ def quantize(data,pred,error_bound):
         
         decompressed_data = pred + quant_index * error_bound
         if abs(decompressed_data - data) > error_bound :
-            print("b")
+            #print("b")
             return 0,data
         else:
-            print("c")
+            #print("c")
             data = decompressed_data
             return quant_index_shifted,data
         
     else:
-        print("a")
+        #print("a")
         return 0,data
     
 
@@ -82,10 +82,10 @@ def pred_and_quantize(data,model,errorbound,output_quantized,output_unpred):
                 elex=elex*data.max
             elif data.normalize==2:
                 elex=elex*scale[i]
-            print(elex)
-            print(eley)
+            #print(elex)
+            #print(eley)
             quantres,predicted=quantize(eley,elex,errorbound)
-            print(quantres)
+            #print(quantres)
             quantarray.append(quantres)
             if quantres==0:
                 unpred.append(eley)
@@ -94,7 +94,7 @@ def pred_and_quantize(data,model,errorbound,output_quantized,output_unpred):
             break
 
 
-    qarray=np.array(quantarray,dtype=np.int16)
+    qarray=np.array(quantarray,dtype=np.int32)
     uarray=np.array(unpred,dtype=np.float32)
 
     qarray.tofile(output_quantized)
