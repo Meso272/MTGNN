@@ -11,7 +11,7 @@ import importlib
 from util import *
 
 
-def quantize(data,pred,errorbound):
+def quantize(data,pred,error_bound):
     radius=32768
     diff = data - pred
     quant_index = (int) (diff / error_bound) + 1
