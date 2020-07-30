@@ -28,12 +28,15 @@ def quantize(data,pred,error_bound):
         
         decompressed_data = pred + quant_index * error_bound
         if abs(decompressed_data - data) > error_bound :
+            print("b")
             return 0,data
         else:
+            print("c")
             data = decompressed_data
             return quant_index_shifted,data
         
     else:
+        print("a")
         return 0,data
     
 
@@ -86,7 +89,7 @@ def pred_and_quantize(data,model,errorbound,output_quantized,output_unpred):
             if quantres==0:
                 unpred.append(eley)
             reconstructed[i]=predicted
-        if not data.go_next(reconstructed):
+        if not data.go_next(1,reconstructed):
             break
 
 
