@@ -104,7 +104,7 @@ def pred(data,model,output):
         scale=data.scale.data.cpu().numpy()
         predict=np.multiply(predict,scale)
         Ytest=np.multiply(Ytest,scale)
-
+    '''
     for i in range(predict.shape[0]):
         for j in range(predict.shape[1]):
             p=predict[i][j]
@@ -112,7 +112,7 @@ def pred(data,model,output):
             print(p)
             print(y)
             print("")
-    
+    '''
     print(predict.shape)
     predict.tofile(args.output)
     
