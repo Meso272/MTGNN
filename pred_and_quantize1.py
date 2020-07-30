@@ -139,6 +139,6 @@ Data = DataLoaderS_pred(args.data, args.n, args.m, device, args.seq_in_len, args
 with open(args.model, 'rb') as f:
     model = torch.load(f)
 
-pred(Data, model,args.output)
+pred_and_quantize(Data, model,args.error,args.outq,args.outu)
                                          
 #print("final test rse {:5.4f} | test rae {:5.4f} | test corr {:5.4f}".format(test_acc, test_rae, test_corr))
