@@ -71,11 +71,14 @@ def pred_and_quantize(data,model,errorbound,output_quantized,output_unpred):
             scale=data.scale.data.cpu().numpy()
         for i in range(data.m):
             elex=output[i]
+            
             eley=Y[i]
+            print(eley)
             if data.normalize==1:
                 elex=elex*data.max
             elif data.normalize==2:
                 elex=elex*scale[i]
+                print(elex)
             quantres=quantize(eley,elex,errorbound)
             quantarray.append(quantres)
             if quantres==0:
