@@ -14,7 +14,7 @@ from util import *
 def quantize(data,pred,error_bound):
     radius=32768
     diff = data - pred
-    quant_index = (int) (abs(diff)/ error_bound) + 1
+    quant_index = (int) (diff / error_bound) + 1
     if (quant_index < radius * 2) :
         quant_index =quant_index>> 1
         half_index = quant_index
