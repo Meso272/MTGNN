@@ -108,8 +108,11 @@ parser.add_argument('--data', type=str, default='./data/solar_AL_test.dat',
 
 parser.add_argument('--model', type=str, default='model/model.pt',
                     help='path to the model')
-parser.add_argument('--output', type=str, 
-                    help='path to the predicted ')
+parser.add_argument('--outq', type=str, 
+                    help='quantized path to the predicted ')
+parser.add_argument('--outu', type=str, 
+                    help='unpred path to the predicted ')
+parser.add_argument('--error', type=float, default=1e-3)
 parser.add_argument('--normalize', type=int, default=2)
 parser.add_argument('--n', type=int, default=10512,help='num of time steps')
 parser.add_argument('--m', type=int, default=137,help='num of variables ')
