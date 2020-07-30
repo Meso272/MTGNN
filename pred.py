@@ -95,7 +95,7 @@ def pred(data,model,output):
    
 
     predict = predict.data.cpu().numpy()
-    Ytest = test.data.cpu().numpy()
+    Ytest = test.data.cpu().numpy().reshape((data.n,data.m))
     print(predict.shape)
     if data.normalize==1:
         predict=np.multiply(predict,data.max)
