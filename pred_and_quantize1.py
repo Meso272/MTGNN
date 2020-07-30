@@ -63,7 +63,7 @@ def pred_and_quantize(data,model,errorbound,output_quantized,output_unpred):
 
         else:
             output=np.zeros(data.m,dtype=np.float32)
-        Y=Y.data.cpu().numpy()
+        Y=Y.data.cpu().numpy()[0]
        
 
         #scale = data.scale.expand(output.size(0), data.m)
