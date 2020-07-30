@@ -52,6 +52,7 @@ def pred_and_quantize(data,model,errorbound,output_quantized,output_unpred):
     quantarray=[]
     unpred=[]
     while(1):
+        print(data.pos)
         X,Y=data.get_data()
         #print(data.get_pos())
         if data.get_pos()>=data.P:
