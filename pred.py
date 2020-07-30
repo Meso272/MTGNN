@@ -34,7 +34,7 @@ def pred_and_evaluate(data,model, evaluateL2, evaluateL1):
         else:
             predict = torch.cat((predict, output))
             test = torch.cat((test, Y))
-
+        
         scale = data.scale.expand(output.size(0), data.m)
         total_loss += evaluateL2(output * scale, Y * scale).item()
         total_loss_l1 += evaluateL1(output * scale, Y * scale).item()
@@ -47,6 +47,13 @@ def pred_and_evaluate(data,model, evaluateL2, evaluateL1):
 
     predict = predict.data.cpu().numpy()
     Ytest = test.data.cpu().numpy()
+    for i in range(predict.shape[0]):
+        for j in pange(predict.shape[1]):
+            p=predict[i][j]
+            y=Ytest[i][j]
+            print(p)
+            print(y)
+            print("---")
     sigma_p = (predict).std(axis=0)
     sigma_g = (Ytest).std(axis=0)
     mean_p = predict.mean(axis=0)
