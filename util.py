@@ -151,7 +151,7 @@ class DataLoaderS_pred(object):
     def reset_data(self):
         #self.first=True
         self.pos=0
-        self.Y=self.dat[self.pos,:][np.newaxis,:]
+        self.Y=self.dat[self.pos][np.newaxis,:]
         self.X=None
         self.first=True
     def set_pos(self,index):
@@ -166,7 +166,7 @@ class DataLoaderS_pred(object):
         else:
             newestdata=self.dat[self.pos,:][np.newaxis,np.newaxis,:]
         self.pos=self.pos+1
-        self.Y=self.dat[self.pos,:][np.newaxis,:]
+        self.Y=self.dat[self.pos][np.newaxis,:]
         
         if self.first:
             self.X=newestdata
