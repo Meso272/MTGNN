@@ -80,7 +80,7 @@ def pred_and_quantize(data,model,errorbound,output_quantized,output_unpred):
                 elex=elex*scale[i]
             
             quantres=quantize(eley,elex,errorbound)
-            print(quantre)
+            print(quantres)
             quantarray.append(quantres)
             if quantres==0:
                 unpred.append(eley)
