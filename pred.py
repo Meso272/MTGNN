@@ -106,7 +106,7 @@ def pred(data,model,output):
         Ytest=np.multiply(Ytest,scale)
 
     for i in range(predict.shape[0]):
-        for j in pange(predict.shape[1]):
+        for j in range(predict.shape[1]):
             p=predict[i][j]
             y=Ytest[i][j]
             print(p)
