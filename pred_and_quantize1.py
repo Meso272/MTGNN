@@ -27,6 +27,7 @@ def quantize(data,pred,error_bound):
             quant_index_shifted = radius + half_index
         
         decompressed_data = pred + quant_index * error_bound
+        print(decompressed_data)
         if abs(decompressed_data - data) > error_bound :
             print("b")
             return 0,data
