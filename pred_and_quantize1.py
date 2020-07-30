@@ -20,6 +20,7 @@ def quantize(data,pred,error_bound):
         quant_index =quant_index>> 1
         half_index = quant_index
         quant_index =quant_index<< 1
+        print(quant_index)
         quant_index_shifted=0
         if (diff < 0) :
             quant_index = -quant_index
