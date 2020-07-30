@@ -90,7 +90,7 @@ def pred_and_quantize(data,model,errorbound,output_quantized,output_unpred):
             if quantres==0:
                 unpred.append(eley)
             reconstructed[i]=predicted
-        if not data.go_next(1,reconstructed):
+        if not data.go_next(True,reconstructed):
             break
 
 
