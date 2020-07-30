@@ -24,17 +24,17 @@ def quantize(data,pred,error_bound):
             quant_index = -quant_index
             quant_index_shifted = radius - half_index
         else :
-            quant_index_shifted = radius + half_index;
+            quant_index_shifted = radius + half_index
         
         decompressed_data = pred + quant_index * error_bound
         if abs(decompressed_data - data) > error_bound :
-            return 0
+            return 0,data
         else:
-            data = decompressed_data;
-            return quant_index_shifted;
+            data = decompressed_data
+            return quant_index_shifted,data
         
     else:
-        return 0
+        return 0,data
     
 
 
@@ -69,6 +69,7 @@ def pred_and_quantize(data,model,errorbound,output_quantized,output_unpred):
         #scale = data.scale.expand(output.size(0), data.m)
         if data.normalize==2:
             scale=data.scale.data.cpu().numpy()
+        reconstructed=np.zeros(data.m,dtype=np.float32)
         for i in range(data.m):
             elex=output[i]
             
@@ -79,12 +80,13 @@ def pred_and_quantize(data,model,errorbound,output_quantized,output_unpred):
             elif data.normalize==2:
                 elex=elex*scale[i]
             
-            quantres=quantize(eley,elex,errorbound)
+            quantres,predicted=quantize(eley,elex,errorbound)
             print(quantres)
             quantarray.append(quantres)
             if quantres==0:
                 unpred.append(eley)
-        if not data.go_next():
+            reconstructed[i]=predicted
+        if not data.go_next(reconstructed):
             break
 
 

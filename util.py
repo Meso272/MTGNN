@@ -163,7 +163,7 @@ class DataLoaderS_pred(object):
             return False
         
         if datapoint!=None:
-            newestdata=datapoint
+            newestdata=datapoint[np.newaxis,np.newaxis,:]
         else:
             newestdata=self.dat[self.pos,:][np.newaxis,np.newaxis,:]
         self.pos=self.pos+1
