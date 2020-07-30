@@ -82,7 +82,8 @@ def pred_and_quantize(data,model,errorbound,output_quantized,output_unpred):
                 elex=elex*data.max
             elif data.normalize==2:
                 elex=elex*scale[i]
-            
+            print(elex)
+            print(eley)
             quantres,predicted=quantize(eley,elex,errorbound)
             print(quantres)
             quantarray.append(quantres)

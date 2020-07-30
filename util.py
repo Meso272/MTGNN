@@ -158,11 +158,11 @@ class DataLoaderS_pred(object):
     def set_pos(self,index):
 
         self.pos=index
-    def go_next(self, datapoint=None):
+    def go_next(self, use_predicted=False,datapoint=None):
         if self.pos>=self.n-1:
             return False
         
-        if datapoint!=None:
+        if use_predicted:
             newestdata=datapoint[np.newaxis,np.newaxis,:]
         else:
             newestdata=self.dat[self.pos,:][np.newaxis,np.newaxis,:]
