@@ -47,13 +47,7 @@ def pred_and_evaluate(data,model, evaluateL2, evaluateL1):
 
     predict = predict.data.cpu().numpy()
     Ytest = test.data.cpu().numpy()
-    for i in range(predict.shape[0]):
-        for j in pange(predict.shape[1]):
-            p=predict[i][j]
-            y=Ytest[i][j]
-            print(p)
-            print(y)
-            print("---")
+
     sigma_p = (predict).std(axis=0)
     sigma_g = (Ytest).std(axis=0)
     mean_p = predict.mean(axis=0)
@@ -104,11 +98,19 @@ def pred(data,model,output):
     print(predict.shape)
     if data.normalize==1:
         predict=np.multiply(predict,data.max)
+        Ytest=np.multiply(Ytest,data.max)
     elif data.normalize==2:
         scale=data.scale.data.cpu().numpy()
         predict=np.multiply(predict,scale)
+        Ytest=np.multiply(Ytest,scale)
 
-
+    for i in range(predict.shape[0]):
+        for j in pange(predict.shape[1]):
+            p=predict[i][j]
+            y=Ytest[i][j]
+            print(p)
+            print(y)
+            print("")
     
     print(predict.shape)
     predict.tofile(args.output)
