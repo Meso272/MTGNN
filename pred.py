@@ -81,10 +81,10 @@ def pred(data,model,output):
             output=Variable(torch.zeros(1,data.m).to(data.device))
         if predict is None:
             predict = output
-            #test = Y
+            test = Y
         else:
             predict = torch.cat((predict, output))
-            #test = torch.cat((test, Y))
+            test = torch.cat((test, Y))
 
         scale = data.scale.expand(output.size(0), data.m)
         
@@ -95,6 +95,7 @@ def pred(data,model,output):
    
 
     predict = predict.data.cpu().numpy()
+    Ytest = test.data.cpu().numpy()
     print(predict.shape)
     if data.normalize==1:
         predict=np.multiply(predict,data.max)
