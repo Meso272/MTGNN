@@ -92,7 +92,7 @@ def pred_and_quantize(data,model,errorbound,output_quantized,output_unpred):
                 curerrorbound=errorbound*scale[i]
             #print(elex)
             #print(eley)
-            quantres,predicted=quantize(eley,elex,errorbound)
+            quantres,predicted=quantize(eley,elex,curerrorbound)
             #print(quantres)
             #print(predicted)
             #print("-----")
